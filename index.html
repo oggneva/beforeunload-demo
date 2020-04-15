@@ -2,6 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>epico sité</title>
 </head>
 
@@ -10,14 +13,33 @@
     <a href="https://www.google.com">link to somewhere should fire onbeforeunload</a>
     <p id="now">now - </p>
     <p id="then">then - </p>
+    <p id="slow">fetched document size - </p>
     <script>
         const dateWhenPageWasLoaded = new Date();
-        document.getElementById("now").innerHTML += dateWhenPageWasLoaded;
-        document.getElementById("then").innerHTML += localStorage.getItem("then");
+        let abortController = new AbortController();
         window.onbeforeunload = (e) => { 
             console.log(`onbeforeunload fired`, e);
             localStorage.setItem("then", dateWhenPageWasLoaded);
+            abortController.abort();
         };
+
+        document.getElementById("now").innerHTML += dateWhenPageWasLoaded;
+        document.getElementById("then").innerHTML += localStorage.getItem("then");
+        fetch("http://slowwly.robertomurray.co.uk/delay/10000/url/https://api.github.com/users", 
+            {
+                cache: "no-store",
+                signal: abortController.signal
+            })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data.length);
+            document.getElementById("slow").innerHTML += data.length;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     </script>
 </body>
 
