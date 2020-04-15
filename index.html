@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>epico sité</title>
+</head>
+
+<body>
+    <h1>epico sité</h1>
+    <a href="https://www.google.com">link to somewhere should fire onbeforeunload</a>
+    <p id="now">now - </p>
+    <p id="then">then - </p>
+    <script>
+        const dateWhenPageWasLoaded = new Date();
+        document.getElementById("now").innerHTML += dateWhenPageWasLoaded;
+        document.getElementById("then").innerHTML += localStorage.getItem("then");
+        window.onbeforeunload = (e) => { 
+            console.log("onbeforeunload fired");
+            localStorage.setItem("then", dateWhenPageWasLoaded);
+        };
+    </script>
+</body>
+
+</html>
