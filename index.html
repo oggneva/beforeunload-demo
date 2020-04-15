@@ -15,7 +15,7 @@
         document.getElementById("now").innerHTML += dateWhenPageWasLoaded;
         document.getElementById("then").innerHTML += localStorage.getItem("then");
         window.onbeforeunload = (e) => { 
-            console.log("onbeforeunload fired");
+            console.log(`onbeforeunload fired`, e);
             localStorage.setItem("then", dateWhenPageWasLoaded);
         };
     </script>
